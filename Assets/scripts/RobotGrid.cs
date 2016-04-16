@@ -6,11 +6,13 @@ public class RobotGrid : MonoBehaviour
 {
     public int gridWidth = 5;
     public int gridHeight = 5;
-    public int robotX = 0;
+    public int robotX = 2;
     public int robotY = 0;
     public Transform robot;
     public Transform[] nodes;
     public double delayBetweenCommands = 1.0;
+    public Vector2[] asteroidPositions;
+    public Vector2 titaniumAsteroidPosition;
 
     private Queue<string> commandQueue;
     private bool executing;
@@ -36,7 +38,15 @@ public class RobotGrid : MonoBehaviour
                     {
                         if (command == "Analyze")
                         {
-                            // todo: analyze thing
+                            if (NodeContainsAsteroid())
+                            {
+                                Destroy(nodes[robotY * 4 + robotX].GetChild(0).gameObject);
+
+                                if (NodeContainsTiAsteroid())
+                                {
+                                    // winner
+                                }
+                            }
                         }
                         else
                         {
@@ -68,6 +78,23 @@ public class RobotGrid : MonoBehaviour
                 }
             }
         }
+    }
+
+    private bool NodeContainsTiAsteroid()
+    {
+        return (int)titaniumAsteroidPosition.x == robotX && (int)titaniumAsteroidPosition.y == robotY;
+    }
+
+    private bool NodeContainsAsteroid()
+    {
+        foreach (Vector2 pos in asteroidPositions)
+        {
+            if ((int)pos.x == robotX && (int)pos.y == robotY)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void NewInput(string command)
