@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class RobotGrid : MonoBehaviour
 {
-    public int gridWidth = 4;
-    public int gridHeight = 4;
+    public int gridWidth = 5;
+    public int gridHeight = 5;
     public int robotX = 0;
     public int robotY = 0;
     public Transform robot;
