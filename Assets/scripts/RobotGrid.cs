@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
 public class RobotGrid : MonoBehaviour
 {
-//    public AudioSource buttonPressSound;
-    public AudioSource rockChompSound;
+    public GameObject rockParticles;
+    public AudioSource buttonPressSound;
+    public AudioSource rockAnalyzeSound;
     public int gridWidth = 5;
     public int gridHeight = 5;
     public int robotX = 2;
@@ -26,6 +27,8 @@ public class RobotGrid : MonoBehaviour
 	public bool test;
 	bool challengeCompleted;
 
+    private Object rockParticlesInstance;
+
     void Start()
     {
         commandQueue = new Queue<string>();
@@ -35,12 +38,15 @@ public class RobotGrid : MonoBehaviour
     public void Chomp()
     {
         iTween.MoveBy(robotMouth.gameObject, iTween.Hash("y", -0.3, "easeType", "easeOutElastic", "speed", 1, "oncomplete", "CheckForWin", "oncompletetarget", gameObject));
+        
         Destroy(nodes[robotY * 5 + robotX].GetChild(0).gameObject);
+        rockParticlesInstance = GameObject.Instantiate(rockParticles, nodes[robotY * 5 + robotX].position, Quaternion.identity);
     }
 
     public void CheckForWin()
     {
-        rockChompSound.Play();
+        rockAnalyzeSound.Play();
+        Destroy(rockParticlesInstance);
         if (NodeContainsTiAsteroid())
         {
             challengeCompleteCanvas.GetComponent<Canvas>().enabled = true; ;
