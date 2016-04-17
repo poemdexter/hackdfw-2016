@@ -83,8 +83,9 @@ public class RobotGrid : MonoBehaviour
                             }
 
                             Transform toNode = nodes[robotY * 4 + robotX];
-                            robot.LookAt(toNode.position);
-                            robot.Translate(Vector3.forward);
+                            //robot.LookAt(toNode.position);
+							iTween.MoveBy(robot.gameObject, iTween.Hash("looktarget", toNode.position, "looktime", .2, "z", 1, "easeType", "easeInOutExpo", "time", .5));
+                            //robot.Translate(Vector3.forward);
                         }
                     }
                 }
