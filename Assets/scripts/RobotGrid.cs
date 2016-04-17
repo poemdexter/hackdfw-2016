@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -135,7 +135,7 @@ public class RobotGrid : MonoBehaviour
     public void NewInput(string command)
     {
         commandQueue.Enqueue(command);
-//        buttonPressSound.Play();
+        buttonPressSound.Play();
     }
 
     public void ClearQueue()

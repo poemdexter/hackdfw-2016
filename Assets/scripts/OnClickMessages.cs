@@ -21,44 +21,47 @@ public class OnClickMessages : MonoBehaviour
 	public EventSystem _eventsystem;
 	GameObject button;
 	GameObject buttonParent;
-	GameObject buttonToPressDown;
-	GameObject buttonPressedState;
 	float speed = 1;
-	public GameObject hand;
+	//public GameObject hand;
 	Vector3 handStartingPosition;
 
 	void Start()
 	{
 		_eventsystem = EventSystem.current;
-		handStartingPosition = hand.transform.position;
+		//handStartingPosition = hand.transform.position;
 	}
 
 	public void DepressButton()
 	{
 		button = _eventsystem.currentSelectedGameObject;
 		buttonParent = button.transform.parent.gameObject;
-		buttonToPressDown = buttonParent.gameObject.transform.GetChild (1).gameObject;
-		buttonPressedState = buttonParent.gameObject.transform.GetChild (2).gameObject;
 
 		float step = speed * Time.deltaTime;
 
-		buttonToPressDown.transform.position = Vector3.MoveTowards (transform.position, buttonPressedState.transform.position, step);
+		//buttonToPressDown.transform.position = Vector3.MoveTowards (transform.position, buttonPressedState.transform.position, step);
 
-		StartCoroutine (MoveHand ());
+        iTween.MoveBy(buttonParent, iTween.Hash("y", 0.05, "easeType", "easeOutElastic", "speed", .5, "oncomplete", "ResetButtonPosition", "oncompletetarget", gameObject));
+
+		//StartCoroutine (MoveHand ());
 
 	}
 
-	IEnumerator MoveHand()
-	{
-		float step = speed * Time.deltaTime;
+    public void ResetButtonPosition()
+    {
+        iTween.MoveBy(buttonParent, iTween.Hash("y", -0.05, "easeType", "easeOutElastic", "speed", .5));
+    }
+
+	//IEnumerator MoveHand()
+	//{
+	//	float step = speed * Time.deltaTime;
 	
-		hand.transform.position = Vector3.MoveTowards (transform.position, buttonToPressDown.transform.position, step);
+	//	hand.transform.position = Vector3.MoveTowards (transform.position, buttonToPressDown.transform.position, step);
 
-		yield return new WaitForSeconds (.2f);
+	//	yield return new WaitForSeconds (.2f);
 
-		hand.transform.position = Vector3.MoveTowards (transform.position, handStartingPosition, step);
+	//	hand.transform.position = Vector3.MoveTowards (transform.position, handStartingPosition, step);
 
-	}
+	//}
 
 	public void InputCommand(string buttonClicked)
 	{
