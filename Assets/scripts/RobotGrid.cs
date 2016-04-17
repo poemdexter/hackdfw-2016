@@ -19,8 +19,8 @@ public class RobotGrid : MonoBehaviour
     private Queue<string> commandQueue;
     private bool executing;
     private double currentDelayTime;
+	private GameObject challengeCompleteCanvas;
 
-	GameObject challengeCompleteCanvas;
 	public bool test;
 	bool challengeCompleted;
 
