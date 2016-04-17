@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class RobotGrid : MonoBehaviour
 {
+    public AudioSource buttonPressSound;
+    public AudioSource rockChompSound;
     public int gridWidth = 5;
     public int gridHeight = 5;
     public int robotX = 2;
@@ -32,14 +34,27 @@ public class RobotGrid : MonoBehaviour
 
     public void Chomp()
     {
-        iTween.MoveBy(robotMouth.gameObject, iTween.Hash("y", -0.3, "easeType", "easeOutElastic", "speed", 1));
-        Destroy(nodes[robotY * 4 + robotX].GetChild(0).gameObject);
+        iTween.MoveBy(robotMouth.gameObject, iTween.Hash("y", -0.3, "easeType", "easeOutElastic", "speed", 1, "oncomplete", "CheckForWin", "oncompletetarget", gameObject));
+        Destroy(nodes[robotY * 5 + robotX].GetChild(0).gameObject);
     }
+
+    public void CheckForWin()
+    {
+        rockChompSound.Play();
+        if (NodeContainsTiAsteroid())
+        {
+            challengeCompleteCanvas.GetComponent<Canvas>().enabled = true; ;
+            challengeCompleteCanvas.transform.GetChild(6).GetComponent<ChallengeComplete>().ChallengeCompleted();
+            challengeCompleted = true;
+            executing = false;
+        }
+    }
+
     void Update()
     {	
 		if (!challengeCompleted && test) {
 			challengeCompleteCanvas.GetComponent<Canvas> ().enabled = true;
-			challengeCompleteCanvas.transform.GetChild (5).GetComponent<ChallengeComplete> ().ChallengeCompleted ();
+			challengeCompleteCanvas.transform.GetChild(6).GetComponent<ChallengeComplete> ().ChallengeCompleted ();
 			challengeCompleted = true;
 		}
 
@@ -60,14 +75,6 @@ public class RobotGrid : MonoBehaviour
                             {
                                 robot.LookAt(player);
                                 iTween.MoveBy(robotMouth.gameObject, iTween.Hash("y", 0.3, "easeType", "easeOutElastic", "speed", .3, "delay", .1, "oncomplete", "Chomp", "oncompletetarget", gameObject));
-
-                                if (NodeContainsTiAsteroid())
-                                {
-									challengeCompleteCanvas.GetComponent<Canvas> ().enabled = true;;
-									challengeCompleteCanvas.transform.GetChild (5).GetComponent<ChallengeComplete> ().ChallengeCompleted ();
-									challengeCompleted = true;
-                                    executing = false;
-                                }
                             }
                         }
                         else
@@ -104,7 +111,7 @@ public class RobotGrid : MonoBehaviour
 
     private bool NodeContainsTiAsteroid()
     {
-        return (int)titaniumAsteroidPosition.x == robotX && (int)titaniumAsteroidPosition.y == robotY;
+        return titaniumAsteroidPosition.x == robotX && titaniumAsteroidPosition.y == robotY;
     }
 
     private bool NodeContainsAsteroid()
@@ -122,6 +129,7 @@ public class RobotGrid : MonoBehaviour
     public void NewInput(string command)
     {
         commandQueue.Enqueue(command);
+        buttonPressSound.Play();
     }
 
     public void ClearQueue()

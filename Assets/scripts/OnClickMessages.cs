@@ -16,6 +16,7 @@ public class OnClickMessages : MonoBehaviour
 	public Sprite leftSprite;
 	public Sprite rightSprite;
 	public Sprite analyzeSprite;
+    public AudioSource buttonPressSound;
 
 	public void InputCommand(string buttonClicked)
 	{
@@ -29,6 +30,7 @@ public class OnClickMessages : MonoBehaviour
 
 	public void ExecuteCommands()
 	{
+        buttonPressSound.Play();
 		_robotGrid.Execute ();
 		ScoreCounter.totalExecutionsThisChallenge ++;
 		ScoreCounter.totalCommandsThisChallenge += numberOfCommandsEnteredThisExecution;
@@ -43,6 +45,7 @@ public class OnClickMessages : MonoBehaviour
 
 	public void ClearCommands()
 	{
+        buttonPressSound.Play();
 		_robotGrid.ClearQueue ();
 		numberOfCommandsEnteredThisExecution = 0;
 		foreach (GameObject command in Commands) 
@@ -53,7 +56,7 @@ public class OnClickMessages : MonoBehaviour
 
 	public void DisplayCommand(string buttonClicked)
 	{
-		if (numberOfCommandsEnteredThisExecution >= 14)
+		if (numberOfCommandsEnteredThisExecution >= 6)
 			return;
 		
 		Commands [numberOfCommandsEnteredThisExecution].GetComponent<Image> ().enabled = true;
