@@ -19,7 +19,7 @@ public class OnClickMessages : MonoBehaviour
 
 	public void InputCommand(string buttonClicked)
 	{
-		if (numberOfCommandsEnteredThisExecution >= 14) {
+		if (numberOfCommandsEnteredThisExecution >= 7) {
 			tooManyCommandsMessage.SetActive (true);
 			return;
 
