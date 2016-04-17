@@ -18,13 +18,27 @@ public class RobotGrid : MonoBehaviour
     private bool executing;
     private double currentDelayTime;
 
+	GameObject challengeCompleteCanvas;
+	public bool test;
+	bool challengeCompleted;
+
     void Start()
     {
         commandQueue = new Queue<string>();
+	    challengeCompleteCanvas = GameObject.Find ("ChallengeCompleteCanvas");
     }
 
     void Update()
-    {
+    {	
+		if (challengeCompleted)
+			return;
+		
+		if (test) {
+			challengeCompleteCanvas.GetComponent<Canvas> ().enabled = true;
+			challengeCompleteCanvas.transform.GetChild (5).GetComponent<ChallengeComplete> ().ChallengeCompleted ();
+			challengeCompleted = true;
+		}
+			
         if (executing)
         {
             if ((currentDelayTime += Time.deltaTime) >= delayBetweenCommands)
@@ -44,7 +58,9 @@ public class RobotGrid : MonoBehaviour
 
                                 if (NodeContainsTiAsteroid())
                                 {
-                                    // winner
+									challengeCompleteCanvas.GetComponent<Canvas> ().enabled = true;;
+									challengeCompleteCanvas.transform.GetChild (5).GetComponent<ChallengeComplete> ().ChallengeCompleted ();
+									challengeCompleted = true;
                                 }
                             }
                         }
