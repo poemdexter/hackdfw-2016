@@ -3,10 +3,10 @@ using System.Collections;
 
 public class closeCanvas : MonoBehaviour {
 
-	public Canvas MainMenu;
+	public GameObject mainMenuCanvas;
 
 	public void closeCanvasView()
 	{
-		
+		mainMenuCanvas.SetActive (false);
 	}
 }
