@@ -9,6 +9,8 @@ public class RobotGrid : MonoBehaviour
     public int robotX = 2;
     public int robotY = 0;
     public Transform robot;
+    public Transform robotMouth;
+    public Transform player;
     public Transform[] nodes;
     public double delayBetweenCommands = 1.0;
     public Vector2[] asteroidPositions;
@@ -28,18 +30,20 @@ public class RobotGrid : MonoBehaviour
 	    challengeCompleteCanvas = GameObject.Find ("ChallengeCompleteCanvas");
     }
 
+    public void Chomp()
+    {
+        iTween.MoveBy(robotMouth.gameObject, iTween.Hash("y", -0.3, "easeType", "easeOutElastic", "speed", 1));
+        Destroy(nodes[robotY * 4 + robotX].GetChild(0).gameObject);
+    }
     void Update()
     {	
-		if (challengeCompleted)
-			return;
-		
-		if (test) {
+		if (!challengeCompleted && test) {
 			challengeCompleteCanvas.GetComponent<Canvas> ().enabled = true;
 			challengeCompleteCanvas.transform.GetChild (5).GetComponent<ChallengeComplete> ().ChallengeCompleted ();
 			challengeCompleted = true;
 		}
-			
-        if (executing)
+
+        if (!challengeCompleted && executing)
         {
             if ((currentDelayTime += Time.deltaTime) >= delayBetweenCommands)
             {
@@ -51,16 +55,18 @@ public class RobotGrid : MonoBehaviour
                     if (IsValidCommand(command))
                     {
                         if (command == "Analyze")
-                        {
+                        {   
                             if (NodeContainsAsteroid())
                             {
-                                Destroy(nodes[robotY * 4 + robotX].GetChild(0).gameObject);
+                                robot.LookAt(player);
+                                iTween.MoveBy(robotMouth.gameObject, iTween.Hash("y", 0.3, "easeType", "easeOutElastic", "speed", .3, "delay", .1, "oncomplete", "Chomp", "oncompletetarget", gameObject));
 
                                 if (NodeContainsTiAsteroid())
                                 {
 									challengeCompleteCanvas.GetComponent<Canvas> ().enabled = true;;
 									challengeCompleteCanvas.transform.GetChild (5).GetComponent<ChallengeComplete> ().ChallengeCompleted ();
 									challengeCompleted = true;
+                                    executing = false;
                                 }
                             }
                         }
@@ -85,7 +91,6 @@ public class RobotGrid : MonoBehaviour
                             Transform toNode = nodes[robotY * 5 + robotX];
                             robot.LookAt(toNode.position);
 							iTween.MoveTo(robot.gameObject, toNode.position, .5f);
-                            //robot.Translate(Vector3.forward);
                         }
                     }
                 }
@@ -106,7 +111,7 @@ public class RobotGrid : MonoBehaviour
     {
         foreach (Vector2 pos in asteroidPositions)
         {
-            if ((int)pos.x == robotX && (int)pos.y == robotY)
+            if (pos.x == robotX && pos.y == robotY)
             {
                 return true;
             }
