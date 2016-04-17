@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class RobotGrid : MonoBehaviour
 {
-    public AudioSource buttonPressSound;
+//    public AudioSource buttonPressSound;
     public AudioSource rockChompSound;
     public int gridWidth = 5;
     public int gridHeight = 5;
@@ -129,7 +129,7 @@ public class RobotGrid : MonoBehaviour
     public void NewInput(string command)
     {
         commandQueue.Enqueue(command);
-        buttonPressSound.Play();
+//        buttonPressSound.Play();
     }
 
     public void ClearQueue()
